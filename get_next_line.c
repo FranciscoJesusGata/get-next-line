@@ -6,7 +6,7 @@
 /*   By: fgata-va <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 18:04:00 by fgata-va          #+#    #+#             */
-/*   Updated: 2019/12/16 17:00:31 by fgata-va         ###   ########.fr       */
+/*   Updated: 2019/12/17 18:38:01 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,30 @@ char		*ft_concat_free(char *s, char *buffer)
 	return (s);
 }
 
-char	*ft_clean_line(char *s)
+int			ft_line_end(char *buffer)
+{
+	int i;
+
+	i = 0;
+	while(buffer[i] != '\0')
+	{
+		if(buffer[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_clean_line(char *s, char **save)
 {
 	int	i;
 	char *tmp;
 
 	i = 0;
-	while (s[i] != '\0' && (s[i] != '\n' || s[i] != '\0'))
+	while (s[i] != '\0' && s[i] != '\n')
 		i++;
 	tmp = ft_substr(s, 0, i);
+	*save = ft_substr(s, i, BUFFER_SIZE - i);
 	free(s);
 	s = ft_strdup(tmp);
 	return (s);
@@ -47,31 +62,30 @@ char	*ft_clean_line(char *s)
 int     	get_next_line(int fd, char **line)
 {
 	int		r;
-	int		i;
-	int		final;
+	static char	*save[4096];
 	char	buffer[BUFFER_SIZE + 1];
 	char	*s;
+	int		end;
 
-	final = 0;
+	if(save[fd])
+		s = ft_strdup(save[fd]);
 	r = 1;
-	while(r != 0 && final == 0)
+	end = 0;
+	while(end != 1 && r > 0)
 	{
 		r = read(fd, buffer, BUFFER_SIZE);
-		buffer[BUFFER_SIZE] = '\0';
-		i = 0;
-		while(buffer[i] != '\0')
+		if (r > 0)
 		{
-			if(buffer[i] != '\n')
-				final = 1;
-			i++;
+			buffer[BUFFER_SIZE] = '\0';
+			end = ft_line_end(buffer);
+			end = 1;
 		}
 		s = ft_concat_free(s, buffer);
 	}
-	if(r == 0)
-		return (0);
-	if (r < 0)
-		return (-1);
-	*line = ft_strdup(ft_clean_line(s));
+	if(r <= 0)
+		return (r);
+	s = ft_clean_line(s, &save[fd]);
+	*line = ft_strdup(s);
 	free(s);
 	return (1);
 }
