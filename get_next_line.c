@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 18:04:00 by fgata-va          #+#    #+#             */
-/*   Updated: 2019/12/17 18:38:01 by fgata-va         ###   ########.fr       */
+/*   Updated: 2019/12/20 22:38:39 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,31 @@ int			ft_line_end(char *buffer)
 	{
 		if(buffer[i] == '\n')
 			return (1);
+		if(buffer[i + 1] == '\0')
+			return(2);
 		i++;
 	}
 	return (0);
 }
 
-char	*ft_clean_line(char *s, char **save)
+char	*ft_clean_line(char *save, char **line)
 {
 	int	i;
 	char *tmp;
+	char last;
 
-	i = 0;
-	while (s[i] != '\0' && s[i] != '\n')
-		i++;
-	tmp = ft_substr(s, 0, i);
-	*save = ft_substr(s, i, BUFFER_SIZE - i);
-	free(s);
-	s = ft_strdup(tmp);
-	return (s);
+	if(save)
+	{
+		i = 0;
+		while (save[i] != '\0' && save[i] != '\n')
+			i++;
+		*line = ft_substr(save, 0, i);
+		tmp = ft_substr(save, i + 1, BUFFER_SIZE - i);
+		free(save);
+		save = ft_strdup(tmp);
+		return(save);
+	}
+	return (NULL);
 }
 
 int     	get_next_line(int fd, char **line)
@@ -64,29 +71,28 @@ int     	get_next_line(int fd, char **line)
 	int		r;
 	static char	*save[4096];
 	char	buffer[BUFFER_SIZE + 1];
-	char	*s;
 	int		end;
 
-	if(save[fd])
-		s = ft_strdup(save[fd]);
-	r = 1;
+	r = read(fd, buffer, BUFFER_SIZE);
 	end = 0;
+	/*if(save[fd])
+		save[fd] = ft_clean_line(save[fd], line);*/
 	while(end != 1 && r > 0)
 	{
 		r = read(fd, buffer, BUFFER_SIZE);
 		if (r > 0)
 		{
-			buffer[BUFFER_SIZE] = '\0';
+			buffer[r] = '\0';
 			end = ft_line_end(buffer);
 			end = 1;
 		}
-		s = ft_concat_free(s, buffer);
+		save[fd] = ft_concat_free(save[fd], buffer);
 	}
-	if(r <= 0)
+	save[fd] = ft_clean_line(save[fd], line);
+	if(r <= 0 && !save[fd])
 		return (r);
-	s = ft_clean_line(s, &save[fd]);
-	*line = ft_strdup(s);
-	free(s);
+	if(ft_line_end(save[fd]) == 2)
+		free(save[fd]);
 	return (1);
 }
 

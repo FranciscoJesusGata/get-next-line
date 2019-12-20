@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgata-va <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:32:20 by fgata-va          #+#    #+#             */
-/*   Updated: 2019/12/12 21:37:15 by fgata-va         ###   ########.fr       */
+/*   Updated: 2019/12/20 19:42:27 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		return (ft_strlen(src));
 	if (dstsize != 0)
 	{
-		while (src[i] != '\0' && i < dstsize - 1)
+		while (src[i] != '\0' && i < dstsize)
 		{
 			dst[i] = src[i];
 			i++;
