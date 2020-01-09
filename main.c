@@ -4,11 +4,25 @@
 
 int main(void) {
 	int		fd;
-	char	*line;
-	int		r;
+	int		i;
+	int		j;
+	char    *line = 0;
+	char	*lineadress[66];
 
-	fd = open("test.txt", O_RDONLY);
-	while((r = get_next_line(fd, &line)))
-		printf("%d %s \n", r, line);
-	return 0;
+	j = 1;
+	if (!(fd = open("alphabet", O_RDONLY)))
+	{
+		printf("\nError in open\n");
+		return (0);
+	}
+	while ((i = get_next_line(fd, &line)) > 0)
+	{
+		printf("|%s\n", line);
+		lineadress[j - 1] = line;
+		j++;
+	}
+	printf("|%s\n", line);
+	free(line);
+	close(fd);
+	return(0);
 }

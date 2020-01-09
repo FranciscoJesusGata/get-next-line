@@ -6,13 +6,13 @@
 #    By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/22 01:39:28 by fgata-va          #+#    #+#              #
-#    Updated: 2019/12/22 02:18:39 by fgata-va         ###   ########.fr        #
+#    Updated: 2020/01/09 15:27:57 by fgata-va         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -I . -g -D BUFFER_SIZE=1
 
 SRC = get_next_line.c get_next_line_utils.c main.c
 
