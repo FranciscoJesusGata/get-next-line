@@ -6,7 +6,7 @@
 /*   By: fgata-va <fgata-va@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/09 19:32:20 by fgata-va          #+#    #+#             */
-/*   Updated: 2019/12/20 19:42:27 by fgata-va         ###   ########.fr       */
+/*   Updated: 2020/01/13 18:48:15 by fgata-va         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,37 +75,38 @@ char				*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
+char				*ft_strdup(const char *s1)
 {
+	char			*s2;
+	size_t			l;
 	unsigned int	i;
-
-	i = 0;
-	if (!dst || !src)
-		return (ft_strlen(src));
-	if (dstsize != 0)
-	{
-		while (src[i] != '\0' && i < dstsize)
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (ft_strlen(src));
-}
-
-char			*ft_strdup(const char *s1)
-{
-	char		*s2;
-	size_t		l;
 
 	l = ft_strlen(s1);
 	s2 = (char *)malloc(l + 1);
+	i = 0;
 	if (s2)
 	{
-		ft_strlcpy(s2, s1, l);
+		while (s1[i] != '\0' && i < l)
+		{
+			s2[i] = s1[i];
+			i++;
+		}
+		s2[i] = '\0';
 	}
 	else
 		return (0);
 	return (s2);
+}
+
+char				*ft_strchr(const char *s, int c)
+{
+	while (*s != '\0')
+	{
+		if (c == *s)
+			return ((char *)s);
+		s++;
+	}
+	if (c == '\0' && *s == '\0')
+		return ((char *)s);
+	return (NULL);
 }
